@@ -2,9 +2,6 @@ var db = require('db'),
 	mongoose = db.mongoose,
 	should = require('should');
 
-require('../index');
-require('../lib/string-ext/max-length');
-
 describe('String.maxLength:', function() {
 	var TestDoc;
 
