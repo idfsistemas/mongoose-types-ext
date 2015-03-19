@@ -21,6 +21,10 @@ describe('Number.exclusiveMin:', function() {
 			field04: {
 				type: Number,
 				exclusivemin: [20, 'Path {PATH} ({VALUE}) out of minimum limit {EXCLUSIVE_MIN}']
+			},
+			field05: {
+				type: Number,
+				exclusivemin: null
 			}
 		});
 		TestDoc = mongoose.model('TestDoc', TestDocSchema);
@@ -29,12 +33,13 @@ describe('Number.exclusiveMin:', function() {
 
 	it('should not impact normal Number types', function(done) {
 		this.timeout(5000);
-		var tst = new TestDoc({field01: 1});
+		var tst = new TestDoc({field01: 1, field05: -1});
 		tst.save(function(err, tst) {
 			if(err) {
 				return done(err);
 			}
 			should(tst.field01).be.eql(1);
+			should(tst.field05).be.eql(-1);
 			done();
 		});
 	});

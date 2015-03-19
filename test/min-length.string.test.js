@@ -21,6 +21,10 @@ describe('String.minLength:', function() {
 			field04: {
 				type: String,
 				minlength: [10, 'Path {PATH} ({VALUE}) has length smaller than {MIN_LENGTH}']
+			},
+			field05: {
+				type: String,
+				minlength: null
 			}
 		});
 		TestDoc = mongoose.model('TestDoc', TestDocSchema);
@@ -29,12 +33,13 @@ describe('String.minLength:', function() {
 
 	it('should not impact normal string types', function(done) {
 		this.timeout(5000);
-		var tst = new TestDoc({field01: '12345678'});
+		var tst = new TestDoc({field01: '12345678', field05: 'a'});
 		tst.save(function(err, tst) {
 			if(err) {
 				return done(err);
 			}
 			should(tst.field01).be.eql('12345678');
+			should(tst.field05).be.eql('a');
 			done();
 		});
 	});

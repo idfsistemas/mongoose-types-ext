@@ -21,6 +21,10 @@ describe('String.maxLength:', function() {
 			field04: {
 				type: String,
 				maxlength: [1, 'Path {PATH} ({VALUE}) has length greater than {MAX_LENGTH}']
+			},
+			field05: {
+				type: String,
+				maxlength: null
 			}
 		});
 		TestDoc = mongoose.model('TestDoc', TestDocSchema);
@@ -29,12 +33,13 @@ describe('String.maxLength:', function() {
 
 	it('should not impact normal string types', function(done) {
 		this.timeout(5000);
-		var tst = new TestDoc({field01: '12345678'});
+		var tst = new TestDoc({field01: '12345678', field05: '12345678901234567890'});
 		tst.save(function(err, tst) {
 			if(err) {
 				return done(err);
 			}
 			should(tst.field01).be.eql('12345678');
+			should(tst.field05).be.eql('12345678901234567890');
 			done();
 		});
 	});
