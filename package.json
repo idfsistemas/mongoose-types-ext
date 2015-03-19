@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/the-darc/mongoose-types-ext",
   "devDependencies": {
+    "conventional-changelog": "0.0.16",
     "gulp": "^3.8.11",
     "gulp-istanbul": "^0.6.0",
     "gulp-jshint": "^1.9.4",

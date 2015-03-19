@@ -1,10 +1,11 @@
-var gulp = require('gulp'),
-	path = require('path'),
+var path = require('path'),
+	fs = require('fs'),
+	gulp = require('gulp'),
 	jshintReporter = require('jshint-stylish'),
+	pkg = require(path.join(__dirname, 'package.json')),
 	plugins = require('gulp-load-plugins')({
 		config: path.join(__dirname, 'package.json')
-	}),
-	istanbul = require('gulp-istanbul');
+	});
 
 var filePatterns = {
 	src: ['./lib/**/*.js', './index.js'],
@@ -13,7 +14,7 @@ var filePatterns = {
 
 var config = {
 	files: filePatterns.test,
-	reporter: 'progress',
+	reporter: 'spec',
 
 	target: 'node',
 	framework: 'mocha',
@@ -25,11 +26,9 @@ function handleError(err) {
 	this.emit('end');
 }
 
-function mochaRunnerFactory() {
-	var mocha = require('gulp-mocha');
-
-	return mocha({
-		reporter: config.reporter || 'progress'
+function mochaRunnerFactory(reporter) {
+	return plugins.mocha({
+		reporter: reporter || config.reporter
 	});
 }
 
@@ -69,21 +68,38 @@ gulp.task('test', ['jshint'], function(done) {
 });
 
 gulp.task('test-watch', function(done) {
-	config.reporter = 'spec';
 	unitTestFactory(true)();
 });
 
 gulp.task('test-coverage', function(done) {
 	gulp.src(config.coverage)
-	.pipe(istanbul())
-	.pipe(istanbul.hookRequire())
+	.pipe(plugins.istanbul())
+	.pipe(plugins.istanbul.hookRequire())
 	.on('finish', function() {
 		gulp.src(config.files, {
 			cwd: process.env.PWD,
 			read: false
 		})
 		.pipe(mochaRunnerFactory('progress'))
-		.pipe(istanbul.writeReports())
+		.pipe(plugins.istanbul.writeReports())
 		.on('end', done);
+	});
+});
+
+gulp.task('changelog', function(done) {
+	var changelog = require('conventional-changelog');
+
+	var options = {
+		repository: pkg.homepage,
+		version: pkg.version,
+		file: path.join(__dirname, 'CHANGELOG.md')
+	};
+
+	changelog(options, function(err, log) {
+		if (err) {
+			throw err;
+		}
+
+		fs.writeFile(options.file, log, done);
 	});
 });
