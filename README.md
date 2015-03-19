@@ -1,5 +1,6 @@
 [![npm version](https://badge.fury.io/js/mongoose-types-ext.svg)](http://badge.fury.io/js/mongoose-types-ext)
 [![Build Status](https://travis-ci.org/the-darc/mongoose-types-ext.svg?branch=master)](https://travis-ci.org/the-darc/mongoose-types-ext)
+[![Coverage Status](https://coveralls.io/repos/the-darc/mongoose-types-ext/badge.svg)](https://coveralls.io/r/the-darc/mongoose-types-ext)
 
 # mongoose-types-ext #
 
