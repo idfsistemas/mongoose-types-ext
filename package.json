@@ -1,0 +1,40 @@
+{
+  "name": "mongoose-types-ext",
+  "version": "0.1.0",
+  "description": "A package of mongoose types extensions",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/the-darc/mongoose-types-ext"
+  },
+  "keywords": [
+    "mongoose",
+    "mongodb",
+    "minLength",
+    "maxLength"
+  ],
+  "author": "darc.tec@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/the-darc/mongoose-types-ext/issues"
+  },
+  "homepage": "https://github.com/the-darc/mongoose-types-ext",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-istanbul": "^0.6.0",
+    "gulp-jshint": "^1.9.4",
+    "gulp-load-plugins": "^0.8.1",
+    "gulp-mocha": "^2.0.0",
+    "jasmine-core": "^2.2.0",
+    "jshint-stylish": "^1.0.1",
+    "mocha": "^2.2.1",
+    "mongoose": "^3.8.25",
+    "should": "^5.2.0"
+  }
+}
