@@ -5,7 +5,7 @@ var db = require('db'),
 require('../index');
 require('../lib/string-ext/max-length');
 
-describe('String.maxLength:', function() {
+describe('String.minLength:', function() {
 	var TestDoc;
 
 	before('init db', db.init);
@@ -15,15 +15,15 @@ describe('String.maxLength:', function() {
 			field01: String,
 			field02: {
 				type: String,
-				maxlength: 5
+				minlength: 5
 			},
 			field03: {
 				type: String,
-				maxlength: [10, 'Invalid text length']
+				minlength: [10, 'Invalid text length']
 			},
 			field04: {
 				type: String,
-				maxlength: [1, 'Path {PATH} ({VALUE}) has length greater than {MAX_LENGTH}']
+				minlength: [10, 'Path {PATH} ({VALUE}) has length smaller than {MIN_LENGTH}']
 			}
 		});
 		TestDoc = mongoose.model('TestDoc', TestDocSchema);
@@ -31,6 +31,7 @@ describe('String.maxLength:', function() {
 	});
 
 	it('should not impact normal string types', function(done) {
+		this.timeout(5000);
 		var tst = new TestDoc({field01: '12345678'});
 		tst.save(function(err, tst) {
 			if(err) {
@@ -40,17 +41,17 @@ describe('String.maxLength:', function() {
 			done();
 		});
 	});
-	it('should not throw maxLength error for shorter strings', function(done) {
-		var tst = new TestDoc({field02: '1234'});
+	it('should not throw minLength error for bigger strings', function(done) {
+		var tst = new TestDoc({field02: '123456'});
 		tst.save(function(err, tst) {
 			if(err) {
 				return done(err);
 			}
-			should(tst.field02).be.eql('1234');
+			should(tst.field02).be.eql('123456');
 			done();
 		});
 	});
-	it('should not throw maxLength error for exact length strings', function(done) {
+	it('should not throw minLength error for exact length strings', function(done) {
 		var tst = new TestDoc({field02: '12345'});
 		tst.save(function(err, tst) {
 			if(err) {
@@ -60,7 +61,7 @@ describe('String.maxLength:', function() {
 			done();
 		});
 	});
-	it('should not throw maxLength error for empty values', function(done) {
+	it('should not throw minLength error for empty values', function(done) {
 		var tst = new TestDoc({field01: 'some value'});
 		tst.save(function(err, tst) {
 			if(err) {
@@ -71,23 +72,36 @@ describe('String.maxLength:', function() {
 			done();
 		});
 	});
-	it('should throw maxLength default error message', function(done) {
-		var tst = new TestDoc({field02: '123456'});
+	it('should throw minLength default error message', function(done) {
+		var tst = new TestDoc({field02: '123'});
 		tst.save(function(err) {
 			should(err).be.ok;
 			should(err.message).be.eql('Validation failed');
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field02).be.ok;
 			should(err.errors.field02.message).be.eql(
-				'Path `field02` (123456) exceeds the maximum allowed length (5).'
+				'Path `field02` (123) exceeds the minimum allowed length (5).'
 			);
 			done();
 		});
 	});
-	it('should throw maxLength custom error message', function(done) {
+	it('should throw minLength error for empty strings', function(done) {
+		var tst = new TestDoc({field02: ''});
+		tst.save(function(err) {
+			should(err).be.ok;
+			should(err.message).be.eql('Validation failed');
+			should(err.name).be.eql('ValidationError');
+			should(err.errors.field02).be.ok;
+			should(err.errors.field02.message).be.eql(
+				'Path `field02` () exceeds the minimum allowed length (5).'
+			);
+			done();
+		});
+	});
+	it('should throw minLength custom error message', function(done) {
 		var tst = new TestDoc({
-			field02: '123456',
-			field03: '123456789112345'
+			field02: '123',
+			field03: '12345'
 		});
 		tst.save(function(err) {
 			should(err).be.ok;
@@ -95,14 +109,14 @@ describe('String.maxLength:', function() {
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field02).be.ok;
 			should(err.errors.field02.message).be.eql(
-				'Path `field02` (123456) exceeds the maximum allowed length (5).'
+				'Path `field02` (123) exceeds the minimum allowed length (5).'
 			);
 			should(err.errors.field03).be.ok;
 			should(err.errors.field03.message).be.eql('Invalid text length');
 			done();
 		});
 	});
-	it('should throw maxLength custom error with special tokens replaced', function(done) {
+	it('should throw minLength custom error with special tokens replaced', function(done) {
 		var tst = new TestDoc({field04: 'test'});
 		tst.save(function(err) {
 			should(err).be.ok;
@@ -110,7 +124,7 @@ describe('String.maxLength:', function() {
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field04).be.ok;
 			should(err.errors.field04.message).be.eql(
-				'Path field04 (test) has length greater than 1'
+				'Path field04 (test) has length smaller than 10'
 			);
 			done();
 		});
