@@ -5,7 +5,7 @@ var db = require('db'),
 require('../index');
 require('../lib/string-ext/max-length');
 
-describe('String.maxLength:', function() {
+describe('String.minLength:', function() {
 	var TestDoc;
 
 	before('init db', db.init);
@@ -15,15 +15,15 @@ describe('String.maxLength:', function() {
 			field01: String,
 			field02: {
 				type: String,
-				maxlength: 5
+				exactlength: 5
 			},
 			field03: {
 				type: String,
-				maxlength: [10, 'Invalid text length']
+				exactlength: [10, 'Invalid text length']
 			},
 			field04: {
 				type: String,
-				maxlength: [1, 'Path {PATH} ({VALUE}) has length greater than {MAX_LENGTH}']
+				exactlength: [1, 'Path {PATH} ({VALUE}) has length different of {EXACT_LENGTH}']
 			}
 		});
 		TestDoc = mongoose.model('TestDoc', TestDocSchema);
@@ -38,16 +38,6 @@ describe('String.maxLength:', function() {
 				return done(err);
 			}
 			should(tst.field01).be.eql('12345678');
-			done();
-		});
-	});
-	it('should not throw maxLength error for shorter strings', function(done) {
-		var tst = new TestDoc({field02: '1234'});
-		tst.save(function(err, tst) {
-			if(err) {
-				return done(err);
-			}
-			should(tst.field02).be.eql('1234');
 			done();
 		});
 	});
@@ -72,7 +62,20 @@ describe('String.maxLength:', function() {
 			done();
 		});
 	});
-	it('should throw maxLength default error message', function(done) {
+	it('should throw exactLength error for shorter strings', function(done) {
+		var tst = new TestDoc({field02: '1234'});
+		tst.save(function(err) {
+			should(err).be.ok;
+			should(err.message).be.eql('Validation failed');
+			should(err.name).be.eql('ValidationError');
+			should(err.errors.field02).be.ok;
+			should(err.errors.field02.message).be.eql(
+				'Path `field02` (1234) has length different of the expected (5).'
+			);
+			done();
+		});
+	});
+	it('should throw exactLength default for bigger strings', function(done) {
 		var tst = new TestDoc({field02: '123456'});
 		tst.save(function(err) {
 			should(err).be.ok;
@@ -80,12 +83,12 @@ describe('String.maxLength:', function() {
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field02).be.ok;
 			should(err.errors.field02.message).be.eql(
-				'Path `field02` (123456) exceeds the maximum allowed length (5).'
+				'Path `field02` (123456) has length different of the expected (5).'
 			);
 			done();
 		});
 	});
-	it('should throw maxLength custom error message', function(done) {
+	it('should throw exactLength custom error message', function(done) {
 		var tst = new TestDoc({
 			field02: '123456',
 			field03: '123456789112345'
@@ -96,7 +99,7 @@ describe('String.maxLength:', function() {
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field02).be.ok;
 			should(err.errors.field02.message).be.eql(
-				'Path `field02` (123456) exceeds the maximum allowed length (5).'
+				'Path `field02` (123456) has length different of the expected (5).'
 			);
 			should(err.errors.field03).be.ok;
 			should(err.errors.field03.message).be.eql('Invalid text length');
@@ -111,7 +114,7 @@ describe('String.maxLength:', function() {
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field04).be.ok;
 			should(err.errors.field04.message).be.eql(
-				'Path field04 (test) has length greater than 1'
+				'Path field04 (test) has length different of 1'
 			);
 			done();
 		});
