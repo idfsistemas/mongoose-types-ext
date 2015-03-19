@@ -80,7 +80,15 @@ gulp.task('test-coverage', function(done) {
 		})
 		.pipe(mochaRunnerFactory('progress'))
 		.pipe(plugins.istanbul.writeReports())
-		.on('end', done);
+		.on('end', function() {
+			if (process.env.TRAVIS) {
+				gulp.src('./coverage/**/lcov.info')
+				.pipe(plugins.coveralls())
+				.on('end', done);
+			} else {
+				done();
+			}
+		});
 	});
 });
 
