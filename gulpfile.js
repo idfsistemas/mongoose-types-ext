@@ -21,11 +21,6 @@ var config = {
 	coverage: filePatterns.src
 };
 
-function handleError(err) {
-	console.log(err.toString());
-	this.emit('end');
-}
-
 function mochaRunnerFactory(reporter) {
 	return plugins.mocha({
 		reporter: reporter || config.reporter
@@ -34,12 +29,15 @@ function mochaRunnerFactory(reporter) {
 
 function unitTestFactory(watch) {
 	function mochaRunner() {
-		return gulp.src(config.files, {
+		var g = gulp.src(config.files, {
 			cwd: process.env.PWD,
 			read: false
 		})
-		.pipe(mochaRunnerFactory(config.reporter))
-		.on('error', handleError);
+		.pipe(mochaRunnerFactory(config.reporter));
+		if (watch) {
+			g.on('error', console.warn.bind(console));
+		}
+		return g;
 	}
 
 	if (!watch) {

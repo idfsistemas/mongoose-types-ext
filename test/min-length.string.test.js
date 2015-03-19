@@ -1,5 +1,5 @@
-var db = require('db'),
-	mongoose = db.mongoose,
+var db = require('./db'),
+	mongoose = require('mongoose'),
 	should = require('should');
 
 describe('String.minLength:', function() {
