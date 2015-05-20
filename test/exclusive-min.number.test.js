@@ -72,7 +72,7 @@ describe('Number.exclusiveMin:', function() {
 		var tst = new TestDoc({field02: 1});
 		tst.save(function(err) {
 			should(err).be.ok;
-			should(err.message).be.eql('Validation failed');
+			should(err.message).be.eql('TestDoc validation failed');
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field02).be.ok;
 			should(err.errors.field02.message).be.eql(
@@ -86,7 +86,7 @@ describe('Number.exclusiveMin:', function() {
 		var tst = new TestDoc({field02: 5});
 		tst.save(function(err) {
 			should(err).be.ok;
-			should(err.message).be.eql('Validation failed');
+			should(err.message).be.eql('TestDoc validation failed');
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field02).be.ok;
 			should(err.errors.field02.message).be.eql(
@@ -103,7 +103,7 @@ describe('Number.exclusiveMin:', function() {
 		});
 		tst.save(function(err) {
 			should(err).be.ok;
-			should(err.message).be.eql('Validation failed');
+			should(err.message).be.eql('TestDoc validation failed');
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field02).be.ok;
 			should(err.errors.field02.message).be.eql(
@@ -119,7 +119,7 @@ describe('Number.exclusiveMin:', function() {
 		var tst = new TestDoc({field04: 15});
 		tst.save(function(err) {
 			should(err).be.ok;
-			should(err.message).be.eql('Validation failed');
+			should(err.message).be.eql('TestDoc validation failed');
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field04).be.ok;
 			should(err.errors.field04.message).be.eql(

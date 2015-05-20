@@ -40,20 +40,18 @@ var YourModel = mongoose.model('YourModel', YourSchemaDefinition);
 ## Supported extentions ##
 
 ### String ###
- - `minlength`: Sets a min length string validator.
- - `maxlength`: Sets a max length string validator.
  - `exactLength`: Sets a exact length string validator.
 
-**Custom error messages:** You can also configure custom error messages and use the special tokens:
-`{MIN_LENGTH}`, `{MAX_LENGTH}` and `{EXACT_LENGTH}` which will be replaced with the invalid value. Ex: 
+**Custom error messages:** You can also configure custom error messages and use the special token
+`{EXACT_LENGTH}` which will be replaced with the invalid value. Ex: 
 
 ```javascript
-var max = [4, 'The length of path `{PATH}` ({VALUE}) is beneath the limit ({MAX_LENGTH}).'];
-var schema = new Schema({ n: { type: String, maxlength: max })
+var rule = [4, 'The length of path `{PATH}` ({VALUE}) should be equal {EXACT_LENGTH}.'];
+var schema = new Schema({ n: { type: String, exactLength: rule })
 var M = mongoose.model('Measurement', schema);
 var s= new M({ n: 'teste' });
 s.validate(function (err) {
-	console.log(String(err)); // ValidationError: The length of path `n` (5) is beneath the limit (4).
+	console.log(String(err)); // ValidationError: The length of path `n` (test) should be equal 4.
 })
 ```
 
@@ -64,12 +62,12 @@ s.validate(function (err) {
 `{EXCLUSIVE_MIN}` which will be replaced with the invalid value. Ex: 
 
 ```javascript
-var min = [10, 'The value of path `{PATH}` ({VALUE}) should be greater than ({EXCLUSIVE_MIN}).'];
-var schema = new Schema({ n: { type: Number, min: min })
+var rule = [10, 'The value of path `{PATH}` ({VALUE}) should be greater than ({EXCLUSIVE_MIN}).'];
+var schema = new Schema({ n: { type: Number, exclusivemin: rule })
 var M = mongoose.model('Measurement', schema);
-var s= new M({ n: 4 });
+var s= new M({ n: 10 });
 s.validate(function (err) {
-	console.log(String(err)); // ValidationError: The value of path `n` (4) should be greater than 10.
+	console.log(String(err)); // ValidationError: The value of path `n` (10) should be greater than 10.
 });
 ```
 
