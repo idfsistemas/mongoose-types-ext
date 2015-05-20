@@ -68,7 +68,7 @@ describe('String.exactLength:', function() {
 		var tst = new TestDoc({field02: '1234'});
 		tst.save(function(err) {
 			should(err).be.ok;
-			should(err.message).be.eql('Validation failed');
+			should(err.message).be.eql('TestDoc validation failed');
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field02).be.ok;
 			should(err.errors.field02.message).be.eql(
@@ -81,7 +81,7 @@ describe('String.exactLength:', function() {
 		var tst = new TestDoc({field02: '123456'});
 		tst.save(function(err) {
 			should(err).be.ok;
-			should(err.message).be.eql('Validation failed');
+			should(err.message).be.eql('TestDoc validation failed');
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field02).be.ok;
 			should(err.errors.field02.message).be.eql(
@@ -97,7 +97,7 @@ describe('String.exactLength:', function() {
 		});
 		tst.save(function(err) {
 			should(err).be.ok;
-			should(err.message).be.eql('Validation failed');
+			should(err.message).be.eql('TestDoc validation failed');
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field02).be.ok;
 			should(err.errors.field02.message).be.eql(
@@ -112,7 +112,7 @@ describe('String.exactLength:', function() {
 		var tst = new TestDoc({field04: 'test'});
 		tst.save(function(err) {
 			should(err).be.ok;
-			should(err.message).be.eql('Validation failed');
+			should(err.message).be.eql('TestDoc validation failed');
 			should(err.name).be.eql('ValidationError');
 			should(err.errors.field04).be.ok;
 			should(err.errors.field04.message).be.eql(
